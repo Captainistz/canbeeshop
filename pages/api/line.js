@@ -11,7 +11,7 @@ const {
   addStock,
   addPromotion,
   getQuickRepliesType,
-} = require('../utils')
+} = require('../../firebase/utils')
 
 var state = {}
 const merchant = [
