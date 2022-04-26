@@ -1,5 +1,4 @@
 const admin = require('firebase-admin')
-const { getFirestore } = require('firebase-admin/firestore')
 
 const serviceAccount = require('./serviceAccount.json')
 
@@ -8,7 +7,7 @@ if (admin.apps.length === 0) {
     credential: admin.credential.cert(serviceAccount),
   })
 }
-const firestore = getFirestore()
+const firestore = admin.firestore()
 console.log('    🔥 [firebase]: connected to firebase')
 
 module.exports = {

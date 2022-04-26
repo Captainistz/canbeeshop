@@ -1,4 +1,6 @@
-const { FieldValue } = require('firebase-admin/firestore')
+const {
+  firestore: { FieldValue },
+} = require('firebase-admin')
 const { firestore } = require('../firebase/connectToFirebase')
 
 const addItems = async (req) => {
