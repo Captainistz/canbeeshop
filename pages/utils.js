@@ -1,7 +1,6 @@
-const {
-  firestore: { FieldValue },
-} = require('firebase-admin')
 const { firestore } = require('../firebase/connectToFirebase')
+
+import firebase from 'firebase/compat/app'
 
 const addItems = async (req) => {
   try {
@@ -42,11 +41,13 @@ const readStock = async (req) => {
 
 const allStock = async (req) => {
   const result = {}
-  const collectionLists = await firestore.listCollections()
+  const collectionListsSnap = await firestore.collection('type').get()
+  const collectionLists = []
+  collectionListsSnap.forEach((e) => {
+    collectionLists.push(e.id)
+  })
   for (const collection of collectionLists) {
-    if (collection.id != 'log') {
-      result[collection.id] = await readStock(collection.id)
-    }
+    result[collection] = await readStock(collection)
   }
   return result
 }
@@ -86,8 +87,8 @@ const getQuickRepliesType = async () => {
   const quickReplies = {
     items: [],
   }
-  const snap = await firestore.listCollections()
-  snap.map((e) => {
+  const snap = await firestore.collection('type').get()
+  snap.forEach((e) => {
     if (e.id != 'log') {
       quickReplies['items'].push({
         type: 'action',
@@ -133,7 +134,7 @@ const removeStock = async (_type, name, uid) => {
       .doc(name)
       .set(
         {
-          quantity: FieldValue.increment(-1),
+          quantity: firebase.firestore.FieldValue.increment(-1),
         },
         { merge: true }
       )
@@ -160,7 +161,7 @@ const addStock = async (type, name, quantity, uid) => {
     .doc(name)
     .set(
       {
-        quantity: FieldValue.increment(quantity),
+        quantity: firebase.firestore.FieldValue.increment(quantity),
       },
       { merge: true }
     )
@@ -250,7 +251,7 @@ const addLog = async (type, message, uid) => {
       type,
       message,
       uid,
-      time: FieldValue.serverTimestamp(),
+      time: firebase.firestore.FieldValue.serverTimestamp(),
     })
   } catch (e) {
     console.log(e)

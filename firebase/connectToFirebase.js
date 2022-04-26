@@ -1,13 +1,10 @@
-const admin = require('firebase-admin')
+import firebase from "firebase/compat/app";
+import 'firebase/compat/firestore'
 
 const serviceAccount = require('./serviceAccount.json')
 
-if (admin.apps.length === 0) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  })
-}
-const firestore = admin.firestore()
+firebase.initializeApp(serviceAccount)
+const firestore = firebase.firestore()
 console.log('    🔥 [firebase]: connected to firebase')
 
 module.exports = {
