@@ -205,7 +205,9 @@ const messageHandler = async (messages, message, uid) => {
 }
 
 export default async function handler(req, res) {
-  res.status(200).json({})
+  if (req.body.events.length == 0) {
+    return res.status(200).json({})
+  }
   if (req.body.events[0].type === 'message') {
     const messages = []
     if (!Object.keys(state).includes(req.body.events[0].source.userId)) {
